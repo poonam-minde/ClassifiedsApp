@@ -1,17 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
+from taggit.managers import TaggableManager
 
 class AdInfo(models.Model):
     title = models.CharField(
         max_length=255,
     )
     description = models.TextField()
-    tags = models.CharField(
-        max_length=255,
-        blank=True,
-    )
-
+    tags = TaggableManager()
+    
     def __str__(self):
         return self.title
 
