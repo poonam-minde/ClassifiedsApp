@@ -1,0 +1,48 @@
+.ad-detail-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  .ad-title {
+    font-size: 34px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--seconday-color)
+  }
+
+  .ad-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .ad-description {
+    margin-bottom: 20px;
+  }
+
+  .ad-tags ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .ad-tags li {
+    display: inline-block;
+    background: #e0e0e0;
+    margin: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  .ad-contact, .ad-location, .ad-salary, ad-category {
+    margin-bottom: 20px;
+  }
+
+  h2, h3 {
+    color: #333;
+  }

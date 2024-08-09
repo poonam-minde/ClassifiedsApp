@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from .forms import JobAdForm, SaleAdForm, RentalAdForm, ServiceAdForm, EventAdForm, ClassAdForm
 from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
 from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
 
 class ModelMappingMixin:
     model_mapping = {
@@ -66,3 +67,15 @@ class AdCreateView(LoginRequiredMixin, ModelMappingMixin,CreateView):
 
     def get_queryset(self):
         return self.get_model().objects.all()
+    
+class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
+    template_name = 'ad/ad_detail.html'
+    context_object_name = 'ad'
+
+    def get_model(self):
+        adtype = self.kwargs['adtype']
+        return self.model_mapping.get(adtype)
+    
+    def get_queryset(self):
+        model = self.get_model()
+        return model.objects.all()

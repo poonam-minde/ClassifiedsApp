@@ -20,37 +20,37 @@
 <h1 class="heading">Ad List</h1>
     {% if jobs %}
       <div class="list-heading">JOBS</div>
-      {% with ads=jobs %}
+      {% with ads=jobs adtype='job' %}
          {% include "includes/table.html" %}
       {% endwith %}
     {% endif %}
     {% if rentals %}
       <div class="list-heading">RENTALS</div>
-      {% with ads=rentals %}
+      {% with ads=rentals adtype='rental' %}
          {% include "includes/table.html" %}
       {% endwith %}
     {% endif %}
     {% if sales %}
       <div class="list-heading">SALES</div>
-      {% with ads=sales %}
+      {% with ads=sales adtype='sale' %}
          {% include "includes/table.html" %}
       {% endwith %}
     {% endif %}
     {% if services %}
       <div class="list-heading">SERVICES</div>
-      {% with ads=services %}
+      {% with ads=services adtype='service' %}
          {% include "includes/table.html" %}
       {% endwith %}
     {% endif %}
     {% if events %}
       <div class="list-heading">EVENTS</div>
-      {% with ads=events %}
+      {% with ads=events adtype='event' %}
          {% include "includes/table.html" %}
       {% endwith %}
     {% endif %}
     {% if classes %}
       <div class="list-heading">CLASSES</div>
-      {% with ads=classes %}
+      {% with ads=classes adtype='class' %}
          {% include "includes/table.html" %}
       {% endwith %}
     {% endif %}

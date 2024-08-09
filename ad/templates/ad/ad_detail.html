@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style%}
+  <link href="{% static "css/detail.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="ad-detail-container">
+
+    <h1 class="ad-title">{{ ad.title }}</h1>
+  
+    {% if ad.image %}
+      <div class="ad-image">
+        <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+      </div>
+    {% endif %}
+
+    <div class="ad-description">
+      <h2>Description: </h2>
+      <p>{{ ad.description }}</p>
+    </div>
+    
+    <div class="ad-category">
+        <p><strong>Category: </strong>{{ ad.get_category_display }}</p>
+    </div>
+
+    <div class="ad-tags">
+      <h3>Tags:</h3>
+      <ul>
+        {% for tag in ad.tags.all %}
+        <li>{{ tag.name }}</li>
+        {% empty %}
+        <li>No tags available</li>
+        {% endfor %}
+      </ul>
+    </div>
+  
+    {% if ad.email%}
+      <div class="ad-contact">
+        <h3>Contact Information</h3>
+        <p><strong>Email:</strong> <a href="mailto:{{ ad.email }}">{{ ad.email }}</a></p>
+        <p><strong>Phone:</strong> <a href="tel:{{ ad.phone }}">{{ ad.phone }}</a></p>
+      </div>
+    {% endif %}
+  
+    {% if ad.location %}
+      <div class="ad-location">
+        <h3>Location</h3>
+        <p><strong>Address:</strong> {{ ad.location }}</p>
+        <p><strong>Postal Code:</strong> {{ ad.postal_code }}</p>
+      </div>
+    {% endif %}
+  
+    <div class="ad-salary">
+      {% if ad.salary %}
+        <p><strong>Salary:</strong> {{ ad.salary}}</p>
+      {% elif ad.price %}
+        <p><strong>Price:</strong> {{ ad.price }}</p>
+      {% elif ad.fees%}
+        <p><strong>Fees:</strong> {{ ad.fees }}</p>
+      {% elif ad.charge %}
+        <p><strong>Charge:</strong> {{ ad.charge }}</p>
+        <p><strong>Charge for period:</strong> {{ ad.get_period_display }}</p>
+      {% endif %}
+    </div>
+    
+    {% if ad.start_date %}
+    <h3>Event Time</h3>
+    <p><strong>Start Time:</strong> {{ ad.start_date }}</p>
+    <p><strong>End Time:</strong> {{ ad.end_date }}</p>
+    {% endif %}
+  </div>
+{% endblock %}
+  
