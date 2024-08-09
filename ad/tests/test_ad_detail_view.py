@@ -204,3 +204,33 @@ class ClassAdDetailViewTestCase(TestCase):
         non_existent_pk = self.class_ad.pk + 1
         response = self.client.get(reverse('ad:ad_detail', kwargs={'adtype': 'class', 'pk': non_existent_pk}))
         self.assertEqual(response.status_code, 404)
+
+class AdDetailViewInvalidAdTypeTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username='testuser', password='password')
+        cls.job_ad = JobAd.objects.create(
+            title='Test Job Ad 2',
+            category='PT',
+            description='Job description',
+            tags='job',
+            email='test@example.com',
+            phone='1234567890',
+            location='Test Location',
+            postal_code='12345',
+            salary=50000,
+            owner=cls.user,
+        )
+    
+    def setUp(self):
+        self.client.login(username='testuser', password='password')
+
+    def test_ad_detail_view_invalid_adtype(self):
+        invalid_adtype = 'invalid_adtype'
+        response = self.client.get(reverse('ad:ad_detail', kwargs={'adtype': invalid_adtype, 'pk': self.job_ad.pk}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_ad_detail_view_valid_adtype(self):
+        response = self.client.get(reverse('ad:ad_detail', kwargs={'adtype': 'job', 'pk': self.job_ad.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.job_ad.title)

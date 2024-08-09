@@ -7,6 +7,7 @@ from .forms import JobAdForm, SaleAdForm, RentalAdForm, ServiceAdForm, EventAdFo
 from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
+from django.http import Http404
 
 class ModelMappingMixin:
     model_mapping = {
@@ -74,7 +75,10 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
 
     def get_model(self):
         adtype = self.kwargs['adtype']
-        return self.model_mapping.get(adtype)
+        model = self.model_mapping.get(adtype)
+        if not model:
+            raise Http404(f"No model found for ad type: {adtype}")
+        return model
     
     def get_queryset(self):
         model = self.get_model()
