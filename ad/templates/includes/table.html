@@ -1,0 +1,71 @@
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Description</th>
+            {% if ads.first.price%}
+              <th>Price</th>
+            {% elif ads.first.fees %}
+              <th>Fees</th>
+            {% elif ads.first.salary%}
+              <th>Salary</th>
+            {% else %}
+              <th>Charges</th>
+              <th>Period</th>
+            {% endif %}
+            <th>Tags</th>
+            {% if ads.first.location %}
+              <th>Location</th>
+              <th>Postal Code</th>
+            {% endif%}
+            {% if ads.first.email %}
+              <th>Email</th>
+              <th>Phone</th>
+            {% endif %}
+            {% if ads.first.start_date %}
+              <th>Start Date</th>
+            {% endif %}
+            {% if ads.first.end_date %}
+              <th>End Date</th>
+            {% endif %}
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ad in ads %}
+            <tr>
+                <td>{{ ad.title }}</td>
+                <td>{{ ad.category }}</td>
+                <td>{{ ad.description|truncatechars:50 }}</td>
+                {% if ad.price %}
+                  <td>Rs. {{ ad.price }}</td>
+                {% elif ad.salary %}
+                  <td>Rs. {{ ad.salary }}</td>
+                {% elif ad.fees%}
+                  <td>Rs. {{ ad.fees }}</td>
+                {% else %}
+                  <td>Rs. {{ ad.charge }}</td>
+                  <td>Rs. {{ ad.period }}</td>
+                {% endif %}
+                <td>{{ ad.tags}}</td>
+                {% if ad.location%}
+                  <td>{{ ad.location }}</td>
+                  <td>{{ ad.postal_code }}</td>
+                {% endif %}
+                {% if ad.email %}
+                  <td>{{ ad.email }}</td>
+                  <td>{{ ad.phone }}</td>
+                {% endif%}
+                {% if ad.start_date%}
+                  <td>{{ ad.start_date }}</td>
+                  <td>{{ ad.end_date }}</td>
+                {% endif%}
+                <td>
+                    <button type="button" class="edit-button button">Edit</button>
+                    <button type="button" class="delete-button button">Delete</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

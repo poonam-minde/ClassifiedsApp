@@ -5,13 +5,9 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .forms import JobAdForm, SaleAdForm, RentalAdForm, ServiceAdForm, EventAdForm, ClassAdForm
 from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
+from django.views.generic import TemplateView
 
-def ad_list(request):
-    return HttpResponse("ad list")
-
-class AdCreateView(LoginRequiredMixin, CreateView):
-    template_name = 'ad/ad_form.html'
-    success_url = reverse_lazy('ad:ad_list')
+class ModelMappingMixin:
     model_mapping = {
         'job': JobAd,
         'sale': SaleAd,
@@ -30,6 +26,25 @@ class AdCreateView(LoginRequiredMixin, CreateView):
         'event': EventAdForm,
         'class': ClassAdForm,
     }
+
+class AdListView(LoginRequiredMixin, TemplateView):
+    template_name = 'ad/ad_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['jobs'] = JobAd.objects.filter(owner=self.request.user)
+        context['rentals'] = RentalAd.objects.filter(owner=self.request.user)
+        context['sales'] = SaleAd.objects.filter(owner=self.request.user)
+        context['services'] = ServiceAd.objects.filter(owner=self.request.user)
+        context['events'] = EventAd.objects.filter(owner=self.request.user)
+        context['classes'] = ClassAd.objects.filter(owner=self.request.user)
+
+        return context
+
+class AdCreateView(LoginRequiredMixin, ModelMappingMixin,CreateView):
+    template_name = 'ad/ad_form.html'
+    success_url = reverse_lazy('ad:ad_list')
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
