@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+ <link href="{% static "css/table.css" %}" rel="stylesheet">
+{% endblock%}
+
+{% block content %}
+
+<div class="nav-create-ad">
+    <h2 class="heading">CREATE NEW ADS</h2>
+    <div><a href="{% url 'ad:create_ad' 'job' %}">JOB</a></div>
+    <div><a href="{% url 'ad:create_ad' 'rental' %}">RENTAL</a></div>
+    <div><a href="{% url 'ad:create_ad' 'sale' %}">SALE</a></div>
+    <div><a href="{% url 'ad:create_ad' 'service' %}">SERVICE</a></div>
+    <div><a href="{% url 'ad:create_ad' 'event' %}">EVENT</a></div>
+    <div><a href="{% url 'ad:create_ad' 'class' %}">CLASS</a></div>
+</div>
+<h1 class="heading">Ad List</h1>
+    {% if jobs %}
+      <div class="list-heading">JOBS</div>
+      {% with ads=jobs %}
+         {% include "includes/table.html" %}
+      {% endwith %}
+    {% endif %}
+    {% if rentals %}
+      <div class="list-heading">RENTALS</div>
+      {% with ads=rentals %}
+         {% include "includes/table.html" %}
+      {% endwith %}
+    {% endif %}
+    {% if sales %}
+      <div class="list-heading">SALES</div>
+      {% with ads=sales %}
+         {% include "includes/table.html" %}
+      {% endwith %}
+    {% endif %}
+    {% if services %}
+      <div class="list-heading">SERVICES</div>
+      {% with ads=services %}
+         {% include "includes/table.html" %}
+      {% endwith %}
+    {% endif %}
+    {% if events %}
+      <div class="list-heading">EVENTS</div>
+      {% with ads=events %}
+         {% include "includes/table.html" %}
+      {% endwith %}
+    {% endif %}
+    {% if classes %}
+      <div class="list-heading">CLASSES</div>
+      {% with ads=classes %}
+         {% include "includes/table.html" %}
+      {% endwith %}
+    {% endif %}
+{% endblock %}

@@ -8,11 +8,9 @@ class AdForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        # Pop the 'adtype' from kwargs to avoid passing it to the superclass __init__
         adtype = kwargs.pop('adtype', None)
         super().__init__(*args, **kwargs)
 
-        # Optionally use the adtype to customize the form (e.g., dynamic field changes)
         if adtype:
             self.fields['title'].label = f'{adtype.capitalize()} Title'
 
