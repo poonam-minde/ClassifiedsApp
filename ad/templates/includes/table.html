@@ -35,7 +35,7 @@
     <tbody>
         {% for ad in ads %}
             <tr>
-                <td>{{ ad.title }}</td>
+                <td><a href="{% url 'ad:ad_detail' adtype ad.id %}">{{ ad.title }}</a></td>
                 <td>{{ ad.category }}</td>
                 <td>{{ ad.description|truncatechars:50 }}</td>
                 {% if ad.price %}
