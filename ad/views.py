@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
@@ -120,10 +120,10 @@ class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
 class AdDeleteView(LoginRequiredMixin, DeleteView, ModelMappingMixin):
     template_name = 'ad/ad_delete.html'
     context_object_name = 'ad'
-
+    
     def get_queryset(self):
-        model = self.get_model()
-        return model.objects.all()
+        model = super().get_model()
+        return model.objects.filter(owner=self.request.user)
     
     def get_success_url(self):
         return reverse_lazy('ad:ad_list')
