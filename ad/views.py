@@ -117,13 +117,9 @@ class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
         context['is_update'] = True
         return context
     
-class AdDeleteView(LoginRequiredMixin, DeleteView, ModelMappingMixin):
+class AdDeleteView(LoginRequiredMixin, ModelMappingMixin, DeleteView):
     template_name = 'ad/ad_delete.html'
     context_object_name = 'ad'
-    
-    def get_queryset(self):
-        model = super().get_model()
-        return model.objects.filter(owner=self.request.user)
     
     def get_success_url(self):
         return reverse_lazy('ad:ad_list')
