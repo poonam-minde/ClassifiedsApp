@@ -30,6 +30,21 @@ class ModelMappingMixin:
         'class': ClassAdForm,
     }
 
+    def get_model(self):
+        adtype = self.kwargs['adtype']
+        model = self.model_mapping.get(adtype)
+        if not model:
+            raise Http404(f"No model found for ad type: {adtype}")
+        return model
+
+    def get_form_class(self):
+        adtype = self.kwargs['adtype']
+        return self.form_mapping.get(adtype)
+
+    def get_queryset(self):
+        model = self.get_model()
+        return model.objects.all()
+
 class AdListView(LoginRequiredMixin, TemplateView):
     template_name = 'ad/ad_list.html'
 
@@ -85,24 +100,9 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
         model = self.get_model()
         return model.objects.all()
     
-class AdUpdateView(LoginRequiredMixin, UpdateView, ModelMappingMixin):
+class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
     template_name = 'ad/ad_form.html'
     context_object_name = 'ad'
-    
-    def get_model(self):
-        adtype = self.kwargs['adtype']
-        model = self.model_mapping.get(adtype)
-        if not model:
-            raise Http404(f"No model found for ad type: {adtype}")
-        return model
-    
-    def get_form_class(self):
-        adtype = self.kwargs['adtype']
-        return self.form_mapping.get(adtype)
-    
-    def get_queryset(self):
-        model = self.get_model()
-        return model.objects.all()
 
     def get_success_url(self):
         adtype = self.kwargs['adtype']
@@ -122,20 +122,10 @@ class AdDeleteView(LoginRequiredMixin, DeleteView, ModelMappingMixin):
     context_object_name = 'ad'
 
     def get_queryset(self):
-        # Get the model based on ad type
         model = self.get_model()
         return model.objects.all()
     
-    def get_model(self):
-        adtype = self.kwargs['adtype']
-        model = self.model_mapping.get(adtype)
-        if not model:
-            raise Http404(f"No model found for ad type: {adtype}")
-        return model
-    
     def get_success_url(self):
-        # Redirect to the list view after successful deletion
-        adtype = self.kwargs['adtype']
         return reverse_lazy('ad:ad_list')
 
     def delete(self, request, *args, **kwargs):
