@@ -6,7 +6,14 @@
 <link href="{% static "css/form.css" %}" rel="stylesheet">
 {% endblock%}
 {% block content %}
-<h1 class="heading">Create New Ad </h1>
+<h1 class="heading">
+    {% if is_update %}
+        Update Ad
+    {% else %}
+        Create New Ad
+    {% endif %}
+</h1>
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% include "includes/forms.html" %}

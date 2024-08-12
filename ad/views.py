@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
@@ -7,6 +6,7 @@ from .forms import JobAdForm, SaleAdForm, RentalAdForm, ServiceAdForm, EventAdFo
 from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic import UpdateView, DeleteView
 from django.http import Http404
 
 class ModelMappingMixin:
@@ -28,6 +28,21 @@ class ModelMappingMixin:
         'event': EventAdForm,
         'class': ClassAdForm,
     }
+
+    def get_model(self):
+        adtype = self.kwargs['adtype']
+        model = self.model_mapping.get(adtype)
+        if not model:
+            raise Http404(f"No model found for ad type: {adtype}")
+        return model
+
+    def get_form_class(self):
+        adtype = self.kwargs['adtype']
+        return self.form_mapping.get(adtype)
+
+    def get_queryset(self):
+        model = self.get_model()
+        return model.objects.filter(owner=self.request.user)
 
 class AdListView(LoginRequiredMixin, TemplateView):
     template_name = 'ad/ad_list.html'
@@ -83,3 +98,32 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
     def get_queryset(self):
         model = self.get_model()
         return model.objects.all()
+    
+class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
+    template_name = 'ad/ad_form.html'
+    context_object_name = 'ad'
+
+    def get_success_url(self):
+        adtype = self.kwargs['adtype']
+        return reverse_lazy('ad:ad_detail', kwargs={'adtype': adtype, 'pk': self.object.pk})
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_update'] = True
+        return context
+    
+class AdDeleteView(LoginRequiredMixin, ModelMappingMixin, DeleteView):
+    template_name = 'ad/ad_delete.html'
+    context_object_name = 'ad'
+    
+    def get_success_url(self):
+        return reverse_lazy('ad:ad_list')
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, "Ad deleted successfully!")
+        return response

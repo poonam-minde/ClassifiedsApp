@@ -46,9 +46,15 @@
                   <td>Rs. {{ ad.fees }}</td>
                 {% else %}
                   <td>Rs. {{ ad.charge }}</td>
-                  <td>Rs. {{ ad.period }}</td>
+                  <td>{{ ad.period }}</td>
                 {% endif %}
-                <td>{{ ad.tags}}</td>
+                <td>
+                  {% for tag in ad.tags.all %}
+                  <span>{{ tag.name }}</span>
+                  {% empty %}
+                  <span> - </span>
+                  {% endfor %}
+                </td>
                 {% if ad.location%}
                   <td>{{ ad.location }}</td>
                   <td>{{ ad.postal_code }}</td>
@@ -62,8 +68,12 @@
                   <td>{{ ad.end_date }}</td>
                 {% endif%}
                 <td>
-                    <button type="button" class="edit-button button">Edit</button>
-                    <button type="button" class="delete-button button">Delete</button>
+                    <a href="{% url 'ad:ad_update' adtype ad.id %}">
+                      <button type="button" class="edit-button button">Edit</button>
+                    </a>
+                    <a href="{% url 'ad:ad_delete' adtype ad.id %}">
+                      <button type="button" class="delete-button button">Delete</button>
+                    </a>
                 </td>
             </tr>
         {% endfor %}
