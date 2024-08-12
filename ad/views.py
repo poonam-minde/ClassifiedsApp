@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
@@ -43,13 +42,7 @@ class ModelMappingMixin:
 
     def get_queryset(self):
         model = self.get_model()
-        return model.objects.all()
-    
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
-        if obj.owner != self.request.user:
-            raise Http404("You do not have permission to edit this ad.")
-        return obj
+        return model.objects.filter(owner=self.request.user)
 
 class AdListView(LoginRequiredMixin, TemplateView):
     template_name = 'ad/ad_list.html'
@@ -115,8 +108,7 @@ class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
         return reverse_lazy('ad:ad_detail', kwargs={'adtype': adtype, 'pk': self.object.pk})
 
     def form_valid(self, form):
-        if form.instance.owner != self.request.user:
-            super().form_invalid(form)   
+        form.instance.owner != self.request.user
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
