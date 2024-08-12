@@ -108,7 +108,7 @@ class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
         return reverse_lazy('ad:ad_detail', kwargs={'adtype': adtype, 'pk': self.object.pk})
 
     def form_valid(self, form):
-        form.instance.owner != self.request.user
+        form.instance.owner = self.request.user
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
