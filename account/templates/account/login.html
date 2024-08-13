@@ -1,0 +1,31 @@
+{% extends "base_account.html" %}
+{% load widget_tweaks %}
+{% load static%}
+
+{% block content %}
+<div class="account-container">
+    <div class="account-form">
+        <h2 class="form-title">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <h3>Username</h3>
+            <div class="form-group">
+                {{ form.username|add_class:"form-control" }}
+            </div>
+            <h3>Password</h3>
+            <div class="form-group">
+                {{ form.password|add_class:"form-control" }}
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <p><a href="{% url 'account:password_reset'%}">Forgot Password</a><a href="{% url 'account:signup'%}"><button type="button" class="btn btn-secondary">Register</button></a></p>
+        </form>
+    </div>
+</div>
+{% endblock %}
