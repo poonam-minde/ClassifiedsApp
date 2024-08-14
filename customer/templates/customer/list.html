@@ -1,0 +1,13 @@
+{% extends "base_customer.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <ul class="list-group">
+        {% for item in ads %}
+            {% include "customer/includes/card.html" %}
+        {% empty %}
+            <div class="unavailable">No ads available.</div>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

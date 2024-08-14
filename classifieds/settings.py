@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ad.apps.AdConfig',
     'account',
+    'customer.apps.CustomerConfig',
     'taggit',
     'widget_tweaks',
 ]

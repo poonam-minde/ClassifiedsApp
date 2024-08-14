@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassiFieds</title>
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/card.css' %}" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav-bar">
+       <h1>ClassiFieds</h1>
+       <input type="text" placeholder="Search...">
+       <div class="nav-auth-container">
+            {% if user.is_authenticated %}  
+                    {{ user.username }}
+                    <form action="{% url 'account:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn logout-button">Logout</button>
+                    </form>
+                    <a href="{% url 'ad:ad_list' %}"><button type='button' class="btn sell-button">SELL</button></a> 
+            {% else %}
+                <a href="{% url 'account:login' %}"><button type='button' class="btn login-button">Log in</button>
+                <a href="{% url 'account:signup' %}"><button type='button' class="btn signup-button">Sign up</button></a>
+            {% endif %}
+
+        </div>
+       
+    </nav>
+    <div class="ad-type-container">
+        <a href="{% url 'customer:all_ad_list'%}" class="{% if ad_type == False %}selected{% endif %}">All</a>
+        <a href="{% url 'customer:sale_list'%}" class="{% if ad_type == 'sale' %}selected{% endif %}">Sale</a>
+        <a href="{% url 'customer:job_list'%}" class="{% if ad_type == 'job' %}selected{% endif %}">Job</a>
+        <a href="{% url 'customer:rental_list'%}" class="{% if ad_type == 'rental' %}selected{% endif %}">Rental</a>
+        <a href="{% url 'customer:service_list'%}" class="{% if ad_type == 'service' %}selected{% endif %}">Service</a>
+        <a href="{% url 'customer:event_list'%}" class="{% if ad_type == 'event' %}selected{% endif %}">Event</a>
+        <a href="{% url 'customer:class_list'%}" class="{% if ad_type == 'class' %}selected{% endif %}">Class</a>
+    </div>
+    <div>
+        
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

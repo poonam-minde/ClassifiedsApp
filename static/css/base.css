@@ -3,6 +3,7 @@
     padding: 0;
     --primary-color:rgb(30, 8, 51);
     --seconday-color: rgb(71, 32, 108);
+    --background-color:  rgb(244, 225, 241);
     --text-color: rgba(255, 255, 255, 0.952);
 }
 .nav-bar{
@@ -27,7 +28,7 @@
     background-color: rgba(207, 133, 227, 0.721);
 }
 body{
-    background-color: rgb(244, 225, 241);
+    background-color: var(--background-color);
 }
 .heading{
     text-align: center;
@@ -57,4 +58,63 @@ body{
     font-size: 18px;
     font-weight: 600;
     margin: 10px;
+}
+.ad-type-container{
+    background-color: skyblue;
+    display: flex;
+    justify-content: space-evenly;
+}
+.ad-type-container a{
+    padding: 10px;
+    font-size: 19px;
+    font-weight: 600;
+    width: 14.28%;
+    text-align: center;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: -15px;
+    text-decoration: none;
+}
+.ad-type-container a:hover{
+    padding: 10px;
+    font-size: 19px;
+    color: var(--primary-color);
+    font-weight: 600;
+    background-color: white;
+}
+.unselected{
+    color: var(--text-color);
+}
+.selected{
+    padding: 10px;
+    font-size: 19px;
+    color: var(--primary-color);
+    font-weight: 600;
+    background-color: var(--background-color);
+}
+.nav-auth-container{
+    width: 200px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.btn{
+    height: 30px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: var(--text-color);
+    border: none;
+}
+.login-button{
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+}
+.signup-button{
+    background-color: green;
+}
+.logout-button{
+    background-color: blue;
+}
+.sell-button{
+    background: linear-gradient(90deg, purple, pink);
 }

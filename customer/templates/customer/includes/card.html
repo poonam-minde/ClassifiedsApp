@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="col-md-4">
+    <div class="card mb-4">
+        {% if item.image %}
+        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+        {% else %}
+        <img src="{% static "img/no_image.jpg" %}" class="card-img-top" alt="{{ item.title }}">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ item.title|capfirst }}</h5>
+            <p class="card-text">{{ item.get_category_display }}</p>
+        </div>
+        <button type='button'>View Details</button>
+    </div>
+</div>
