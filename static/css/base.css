@@ -4,6 +4,7 @@
     --primary-color:rgb(30, 8, 51);
     --seconday-color: rgb(71, 32, 108);
     --text-color: rgba(255, 255, 255, 0.952);
+    --background-color: rgb(244, 225, 241);
 }
 .nav-bar{
     display: flex;
@@ -27,7 +28,7 @@
     background-color: rgba(207, 133, 227, 0.721);
 }
 body{
-    background-color: rgb(244, 225, 241);
+    background-color: var(--background-color)
 }
 .heading{
     text-align: center;
@@ -57,4 +58,44 @@ body{
     font-size: 18px;
     font-weight: 600;
     margin: 10px;
+}
+.adtype-container{
+    background-color: skyblue;
+    display: flex;
+}
+.adtype-container a{
+    width: 14.66%;
+    text-decoration: none;
+    font-size: 19px;
+    text-align: center;
+    padding: 10px;
+}
+.auth-container{
+    width: 200px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.btn{
+    padding: 7px 10px;
+    border: none;
+    border-radius: 5px;
+    color: var(--text-color);
+}
+.logout-button{
+    background-color: red;
+}
+.sell-button{
+    background: linear-gradient(90deg, purple, pink);
+}
+.login-button{
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+}
+.signup-button{
+    background-color: green;
+}
+.selected{
+    background-color: var(--background-color);
+    border-radius: 5px 5px 0px 0px;
 }

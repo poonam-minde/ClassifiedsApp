@@ -6,20 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OLX</title>
     <link href="{% static "css/base.css" %}" rel="stylesheet">
-    {% block style %}{% endblock %}
+    <link href="{% static "css/card.css" %}" rel="stylesheet">
+    <style>
+        
+    </style>
 </head>
 <body>
     <nav class='nav-bar'>
-       <h1>OLX</h1>
+       <h1>ClassiFieds</h1>
        <input type="text">
-       <div>{{request.user}}&nbsp;&nbsp;
-       <img src="{% static "img/shopping_cart.png" %}" height="23" width="26">
+       <div class="auth-container">
+        {% if user.is_authenticated %}
+            {{request.user}}
+            <form id="logout-form" action="{% url 'account:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn logout-button">Logout</button>
+            </form>
+            <a href="{% url 'ad:ad_list'%}"><button type="submit" class="btn sell-button">SELL</button></a>
+        {% else %}
+            <a href="{% url 'account:login' %}"><button type="submit" class="btn login-button">Login</button></a>
+            <a href="{% url 'account:signup' %}"><button type="submit" class="btn signup-button">Signup</button></a>
+        {% endif%}
        </div>
     </nav>
     <div>
-        <div>
-        {% block title %}
-        {% endblock %}
+        <div class="adtype-container">
+        <a href="{% url 'ad:all_ad_list' %}" class='{% if not ad_type %}selected{% endif %}'>All</a>
+        <a href="{% url 'ad:sale_list' %}" class="{% if ad_type == 'sale' %}selected{% endif %}">Sale</a>
+        <a href="{% url 'ad:job_list' %}" class="{% if ad_type == 'job' %}selected{% endif %}">Job</a>
+        <a href="{% url 'ad:rental_list' %}" class="{% if ad_type == 'rental' %}selected{% endif %}">Rental</a>
+        <a href="{% url 'ad:service_list' %}" class="{% if ad_type == 'service' %}selected{% endif %}">Service</a>
+        <a href="{% url 'ad:event_list' %}" class="{% if ad_type == 'event' %}selected{% endif %}">Event</a>
+        <a href="{% url 'ad:class_list' %}" class="{% if ad_type == 'class' %}selected{% endif %}">Class</a>
         </div>
         {% block content %}
         {% endblock %}
