@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
+from .models import JobMessage, RentalMessage, SaleMessage, ServiceMessage, EventMessage, ClassMessage
 
 class JobAdAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'salary', 'location') 
@@ -53,3 +54,39 @@ class ClassAdAdmin(admin.ModelAdmin):
               'phone','show_phone')                                 
 
 admin.site.register(ClassAd, ClassAdAdmin)
+
+@admin.register(JobMessage)
+class JobMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ad', 'created_at', 'parent')
+    search_fields = ('user__username', 'ad__title', 'message')
+    list_filter = ('created_at',)
+
+@admin.register(SaleMessage)
+class SaleMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ad', 'created_at', 'parent')
+    search_fields = ('user__username', 'ad__title', 'message')
+    list_filter = ('created_at',)
+
+@admin.register(RentalMessage)
+class RentalMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ad', 'created_at', 'parent')
+    search_fields = ('user__username', 'ad__title', 'message')
+    list_filter = ('created_at',)
+
+@admin.register(ServiceMessage)
+class ServiceMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ad', 'created_at', 'parent')
+    search_fields = ('user__username', 'ad__title', 'message')
+    list_filter = ('created_at',)
+
+@admin.register(EventMessage)
+class EventMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ad', 'created_at', 'parent')
+    search_fields = ('user__username', 'ad__title', 'message')
+    list_filter = ('created_at',)
+
+@admin.register(ClassMessage)
+class ClassMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ad', 'created_at', 'parent')
+    search_fields = ('user__username', 'ad__title', 'message')
+    list_filter = ('created_at',)

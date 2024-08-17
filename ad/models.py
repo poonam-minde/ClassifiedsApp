@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from taggit.managers import TaggableManager
+from django.utils import timezone
 
 class AdInfo(models.Model):
     title = models.CharField(
@@ -172,4 +173,35 @@ class ClassAd(AdInfo, ContactInfo, AddressInfo):
         null=True,
     )
     fees = models.PositiveIntegerField()
-         
+
+class Message(models.Model):
+    message=models.TextField(default='')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    created_at = models.DateTimeField(default=timezone.now)
+     
+    class Meta:
+        abstract = True
+
+class JobMessage(Message):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_message_user', default=1)
+    ad=models.ForeignKey(JobAd, on_delete=models.CASCADE, related_name='job_message')
+
+class SaleMessage(Message):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='sale_message_user', default=1)
+    ad=models.ForeignKey(SaleAd, on_delete=models.CASCADE, related_name='sale_message')
+
+class RentalMessage(Message):
+    user=models.ForeignKey(User, on_delete=models.CASCADE,related_name='rental_message_user', default=1)
+    ad=models.ForeignKey(RentalAd, on_delete=models.CASCADE, related_name='rental_message')
+
+class ServiceMessage(Message):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_message_user', default=1)
+    ad=models.ForeignKey(ServiceAd, on_delete=models.CASCADE, related_name='service_message')
+
+class EventMessage(Message):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='event_message_user', default=1)
+    ad=models.ForeignKey(EventAd, on_delete=models.CASCADE, related_name='event_message')
+
+class ClassMessage(Message):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='class_message_user', default=1)
+    ad=models.ForeignKey(ClassAd, on_delete=models.CASCADE, related_name='class_message')
