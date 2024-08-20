@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
-from .models import JobMessage, RentalMessage, SaleMessage, ServiceMessage, EventMessage, ClassMessage
+from .models import Message
 
 class JobAdAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'salary', 'location') 
@@ -55,38 +55,20 @@ class ClassAdAdmin(admin.ModelAdmin):
 
 admin.site.register(ClassAd, ClassAdAdmin)
 
-@admin.register(JobMessage)
-class JobMessageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ad', 'created_at', 'parent')
-    search_fields = ('user__username', 'ad__title', 'message')
-    list_filter = ('created_at',)
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'get_ad_object', 'get_ad_title','created_at', 'parent')
+    search_fields = ('user__username', 'message', 'get_ad_title')
+    list_filter = ('created_at', 'content_type')
 
-@admin.register(SaleMessage)
-class SaleMessageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ad', 'created_at', 'parent')
-    search_fields = ('user__username', 'ad__title', 'message')
-    list_filter = ('created_at',)
+    def get_ad_object(self, obj):
+        return obj.content_type.model
+    
+    get_ad_object.short_description = 'Ad Object'
 
-@admin.register(RentalMessage)
-class RentalMessageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ad', 'created_at', 'parent')
-    search_fields = ('user__username', 'ad__title', 'message')
-    list_filter = ('created_at',)
-
-@admin.register(ServiceMessage)
-class ServiceMessageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ad', 'created_at', 'parent')
-    search_fields = ('user__username', 'ad__title', 'message')
-    list_filter = ('created_at',)
-
-@admin.register(EventMessage)
-class EventMessageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ad', 'created_at', 'parent')
-    search_fields = ('user__username', 'ad__title', 'message')
-    list_filter = ('created_at',)
-
-@admin.register(ClassMessage)
-class ClassMessageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'ad', 'created_at', 'parent')
-    search_fields = ('user__username', 'ad__title', 'message')
-    list_filter = ('created_at',)
+    def get_ad_title(self, obj):
+        ad_instance = obj.ad
+        if ad_instance:
+            return getattr(ad_instance, 'title', '(No title)')
+        return '(No ad)'
+    get_ad_title.short_description = 'Ad Title'

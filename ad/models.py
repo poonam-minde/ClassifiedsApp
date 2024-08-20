@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 import datetime
 from taggit.managers import TaggableManager
 from django.utils import timezone
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 class AdInfo(models.Model):
     title = models.CharField(
@@ -178,30 +180,11 @@ class Message(models.Model):
     message=models.TextField(default='')
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     created_at = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages', default=1)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    ad = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return f"Message by {self.user} on {self.created_at}"
      
-    class Meta:
-        abstract = True
-
-class JobMessage(Message):
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_message_user', default=1)
-    ad=models.ForeignKey(JobAd, on_delete=models.CASCADE, related_name='job_message')
-
-class SaleMessage(Message):
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='sale_message_user', default=1)
-    ad=models.ForeignKey(SaleAd, on_delete=models.CASCADE, related_name='sale_message')
-
-class RentalMessage(Message):
-    user=models.ForeignKey(User, on_delete=models.CASCADE,related_name='rental_message_user', default=1)
-    ad=models.ForeignKey(RentalAd, on_delete=models.CASCADE, related_name='rental_message')
-
-class ServiceMessage(Message):
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_message_user', default=1)
-    ad=models.ForeignKey(ServiceAd, on_delete=models.CASCADE, related_name='service_message')
-
-class EventMessage(Message):
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='event_message_user', default=1)
-    ad=models.ForeignKey(EventAd, on_delete=models.CASCADE, related_name='event_message')
-
-class ClassMessage(Message):
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='class_message_user', default=1)
-    ad=models.ForeignKey(ClassAd, on_delete=models.CASCADE, related_name='class_message')
