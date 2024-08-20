@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from taggit.managers import TaggableManager
+from django.utils import timezone
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 class AdInfo(models.Model):
     title = models.CharField(
@@ -172,4 +175,16 @@ class ClassAd(AdInfo, ContactInfo, AddressInfo):
         null=True,
     )
     fees = models.PositiveIntegerField()
-         
+
+class Message(models.Model):
+    message=models.TextField(default='')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    created_at = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages', default=1)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    ad = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return f"Message by {self.user} on {self.created_at}"
+     
