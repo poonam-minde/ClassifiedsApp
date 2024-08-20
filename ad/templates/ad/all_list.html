@@ -4,7 +4,9 @@
     <div class="list-heading">JOBS</div>
     <ul class="list-group">
         {% for item in jobs %}
+            {% with adtype='job' %}
             {% include "includes/card.html" %}
+            {% endwith %}
         {% empty %}
             <div class="unavailable">No ads available.</div>
         {% endfor %}
@@ -12,7 +14,9 @@
     <div class="list-heading">RENTALS</div>
     <ul class="list-group">
         {% for item in rentals %}
+            {% with adtype='rental' %}
             {% include "includes/card.html" %}
+            {% endwith%}
         {% empty %}
             <div class="unavailable">No ads available.</div>
         {% endfor %}
@@ -20,7 +24,9 @@
     <div class="list-heading">SALES</div>
     <ul class="list-group">
         {% for item in sales %}
+            {% with adtype='sale' %}
             {% include "includes/card.html" %}
+            {% endwith %}
         {% empty %}
             <div class="unavailable">No ads available.</div>
         {% endfor %}
@@ -28,7 +34,9 @@
     <div class="list-heading">SERVICES</div>
     <ul class="list-group">
         {% for item in services %}
+            {% with adtype='service' %}
             {% include "includes/card.html" %}
+            {% endwith %}
         {% empty %}
             <div class="unavailable">No ads available.</div>
         {% endfor %}
@@ -36,7 +44,9 @@
     <div class="list-heading">EVENTS</div>
     <ul class="list-group">
         {% for item in events %}
+            {% with adtype='event' %}
             {% include "includes/card.html" %}
+            {% endwith%}
         {% empty %}
             <div class="unavailable">No ads available.</div>
         {% endfor %}
@@ -44,7 +54,9 @@
     <div class="list-heading">CLASSES</div>
     <ul class="list-group">
         {% for item in classes %}
+            {% with adtype='class' %}
             {% include "includes/card.html" %}
+            {% endwith %}
         {% empty %}
             <div class="unavailable">No ads available.</div>
         {% endfor %}

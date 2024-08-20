@@ -72,5 +72,46 @@
     <p><strong>End Time:</strong> {{ ad.end_date }}</p>
     {% endif %}
   </div>
+  {% for comment in comments%}
+  <div style="margin-left: {{ comment.depth }}em;">
+    <p>{{ comment.message }}</p>
+    <small>{{ comment.created_at }}</small>
+    {% if comment.user == request.user%}
+    <div>
+      <a href="{% url 'ad:edit_comment' adtype comment.id %}">
+        <button type="button">Edit</button>
+      </a>
+      <a href="{% url 'ad:delete_comment' adtype ad.id comment.id %}">
+        <button type="button">Delete</button>
+      </a>
+    </div>
+    {% endif %}
+    {% if ad.owner == request.user%}
+    <a href="#" onclick="document.getElementById('reply-form-{{ comment.id }}').style.display='block'; return false;">Reply</a>
+    {% endif %}
+    <div id="reply-form-{{ comment.id }}" style="display:none; margin-left: 1em;">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+        <button type="submit">Post Reply</button>
+      </form>
+    </div>
+    {% for reply in comment.replies.all %}
+          <div style="margin-left: 2em;">
+            <p>{{ reply.message }}</p>
+            <small>{{ reply.created_at }}</small>
+          </div>
+    {% endfor %}
+        
+      </div>
+  {% endfor%}
+  {% if user != ad.owner%}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Message</button>
+  </form>
+  {% endif %}
 {% endblock %}
   

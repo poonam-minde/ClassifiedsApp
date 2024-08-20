@@ -1,13 +1,15 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from .forms import JobAdForm, SaleAdForm, RentalAdForm, ServiceAdForm, EventAdForm, ClassAdForm
-from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
+from .forms import JobAdForm, SaleAdForm, RentalAdForm, ServiceAdForm, EventAdForm, ClassAdForm, MessageForm
+from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd, Message
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic import UpdateView, DeleteView, ListView
 from django.http import Http404
+from django.shortcuts import redirect
+from django.contrib.contenttypes.models import ContentType
 
 class ModelMappingMixin:
     model_mapping = {
@@ -99,6 +101,55 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
         model = self.get_model()
         return model.objects.all()
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ad = self.get_object()
+        adtype = self.kwargs['adtype']
+
+        if ad.owner != self.request.user:
+            context['comments'] = Message.objects.filter(
+                content_type__model=adtype+'ad',
+                object_id=ad.id,
+                user=self.request.user
+            )
+        else:
+            context['comments'] = Message.objects.filter(
+                content_type__model=adtype+'ad',
+                object_id=ad.id
+            ).exclude(user=self.request.user)
+
+        context['adtype'] = adtype
+        context['form'] = MessageForm()
+
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        ad = self.get_object()
+        adtype = self.kwargs['adtype']
+        pk = self.kwargs['pk']
+        form = MessageForm(request.POST)
+        
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.ad = ad
+            new_comment.user = request.user
+            
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                try:
+                    parent_comment = Message.objects.get(id=parent_id)
+                    new_comment.parent = parent_comment
+                except Message.DoesNotExist:
+                    pass
+            
+            new_comment.content_type = ContentType.objects.get_for_model(ad)
+            new_comment.object_id = ad.id
+            new_comment.save()
+            print(new_comment)
+            return redirect('ad:ad_detail', adtype=adtype, pk=pk)
+        
+        return self.get(request, *args, **kwargs)
+      
 class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
     template_name = 'ad/ad_form.html'
     context_object_name = 'ad'
@@ -189,4 +240,40 @@ class AllAdListView(TemplateView):
         context['events'] = EventAd.objects.all()[:4]
         context['classes'] = ClassAd.objects.all()[:4]
 
+        return context
+
+class EditCommentView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Message
+    form_class = MessageForm
+    template_name = 'comment/edit_comment.html'
+    
+    def get_success_url(self):
+        ad = self.object.ad
+        adtype = self.kwargs['adtype']
+        return reverse_lazy('ad:ad_detail', kwargs={'adtype': adtype, 'pk': ad.pk})
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.user
+
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
+class DeleteCommentView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Message  
+    template_name = 'comment/delete_comment.html'
+    
+    def get_success_url(self):
+        ad = self.object.ad
+        adtype = self.kwargs['adtype']
+        return reverse_lazy('ad:ad_detail', kwargs={'adtype': adtype, 'pk': ad.pk})
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['adtype'] = adtype = self.kwargs['adtype']
+        context['id'] = self.object.ad.pk
         return context
