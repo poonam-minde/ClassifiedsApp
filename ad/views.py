@@ -118,7 +118,7 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
                 object_id=ad.id
             ).exclude(user=self.request.user)
 
-        context['adtype'] = adtype
+        context['ad_type'] = adtype
         context['form'] = MessageForm()
 
         return context
