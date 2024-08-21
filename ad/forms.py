@@ -52,9 +52,10 @@ class ClassAdForm(AdForm):
                   'description', 'fees','email', 'show_email', 'phone', 'show_phone']
 
 class MessageForm(forms.ModelForm):
+    parent = forms.ModelChoiceField(queryset=Message.objects.all(), required = False)
     class Meta:
         model = Message
-        fields = ['message']
+        fields = ['message','parent']
         widgets = {
             'message': forms.Textarea(attrs={'rows': 1, 'cols': 40}), 
         }

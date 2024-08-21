@@ -133,19 +133,9 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
             new_comment = form.save(commit=False)
             new_comment.ad = ad
             new_comment.user = request.user
-            
-            parent_id = request.POST.get('parent_id')
-            if parent_id:
-                try:
-                    parent_comment = Message.objects.get(id=parent_id)
-                    new_comment.parent = parent_comment
-                except Message.DoesNotExist:
-                    pass
-            
             new_comment.content_type = ContentType.objects.get_for_model(ad)
             new_comment.object_id = ad.id
             new_comment.save()
-            print(new_comment)
             return redirect('ad:ad_detail', adtype=adtype, pk=pk)
         
         return self.get(request, *args, **kwargs)
