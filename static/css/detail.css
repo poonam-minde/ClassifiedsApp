@@ -1,5 +1,5 @@
 .ad-detail-container {
-    max-width: 600px;
+    min-width: 900px;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ddd;
@@ -11,7 +11,6 @@
   .ad-title {
     font-size: 34px;
     margin-bottom: 20px;
-    text-align: center;
     color: var(--seconday-color)
   }
 
@@ -39,10 +38,91 @@
     border-radius: 4px;
   }
 
-  .ad-contact, .ad-location, .ad-salary, ad-category {
+  .ad-contact, .ad-location, .ad-salary, .ad-category {
     margin-bottom: 20px;
   }
 
   h2, h3 {
     color: #333;
+  }
+
+  .ad-details{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .ad-image{
+     height : 300px;
+     width: 350px;
+  }
+
+  .details{
+    width: 450px;
+    padding: 0px 20px;
+    min-height: 350px;
+  }
+
+  .send-message{
+    background-color: green;
+  }
+
+  .message-form{
+    display: flex;
+    height: 35px;
+    gap: 20px;
+    padding: 20px 0px;
+  }
+  .message-form textarea{
+    font-size: 15px;
+    width: 600px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+  }
+
+  .comment-container{
+    width: 900px;
+  }
+
+  .comment{
+    width: 70%;
+    background-color: #C8C8C8;
+    padding: 10px;
+    border-radius: 7px;
+  }
+
+  .reply-form{
+    display: flex;
+    height: 35px;
+    gap: 20px;
+    padding: 20px 0px;
+    margin-left: 30%;
+  }
+
+  .reply-form textarea{
+    font-size: 15px;
+    width: 500px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+  }
+
+  .reply{
+    margin-left: 30%;
+    background-color: #E6E6FA;
+    padding: 10px;
+    border-radius: 7px;
+  }
+
+  .reply-time{
+    margin-left: 30%; 
+  }
+
+  .edit-button:hover{
+    background-color: blue;
+  }
+
+  .delete-button:hover{
+    background-color: red;
   }

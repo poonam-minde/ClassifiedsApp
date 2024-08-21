@@ -4,7 +4,9 @@
 <div class="container mt-5">
     <ul class="list-group">
         {% for item in ads %}
+            {% with adtype=ad_type%}
             {% include "includes/card.html" %}
+            {% endwith %}
         {% empty %}
             <div class="unavailable">No ads available.</div>
         {% endfor %}

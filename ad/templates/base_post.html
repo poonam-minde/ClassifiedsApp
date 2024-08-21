@@ -4,14 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OLX</title>
+    <title>ClassiFieds</title>
     <link href="{% static "css/base.css" %}" rel="stylesheet">
     <link href="{% static "css/table.css" %}" rel="stylesheet">
 </head>
 <body>
     <nav class='nav-bar'>
-       <h1>OLX</h1>
-       <input type="text">
+       <h1>ClassiFieds</h1>
        <div>{{request.user}}&nbsp;&nbsp;
         <a href="{% url 'ad:all_ad_list' %}"><button type='button' class="btn sell-button">BUY</button></a>
        </div>

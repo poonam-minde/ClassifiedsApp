@@ -1,5 +1,5 @@
 from django import forms
-from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd
+from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd, Message
 
 class AdForm(forms.ModelForm):
     class Meta:
@@ -50,3 +50,13 @@ class ClassAdForm(AdForm):
         model = ClassAd
         fields = ['category', 'title', 'image', 'tags', 'location', 'postal_code', 
                   'description', 'fees','email', 'show_email', 'phone', 'show_phone']
+
+class MessageForm(forms.ModelForm):
+    parent = forms.ModelChoiceField(queryset=Message.objects.all(), required = False)
+    class Meta:
+        model = Message
+        fields = ['message','parent']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 1, 'cols': 40}), 
+        }
+    
