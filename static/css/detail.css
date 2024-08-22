@@ -126,3 +126,8 @@
   .delete-button:hover{
     background-color: red;
   }
+
+  .btn{
+    border: 1px solid black;
+    color: black;
+  }

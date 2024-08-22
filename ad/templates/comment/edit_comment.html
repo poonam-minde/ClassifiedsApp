@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
-
+{% load widget_tweaks %}
 {% block content %}
   <h2>Edit Comment</h2>
-  <form method="post">
+  <form method="post" class="message-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save changes</button>
+    {{ form.message }}
+    <br>
+    <button type="submit" class="btn" style="background-color: blue;">Save changes</button>
   </form>
 {% endblock %}

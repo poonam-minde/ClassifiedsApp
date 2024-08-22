@@ -44,3 +44,7 @@
     padding: 30px;
     font-size: 28px;
 }
+.detail-button a{
+    text-decoration:none; 
+    color: white;
+}

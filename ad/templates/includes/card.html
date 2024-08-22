@@ -11,6 +11,6 @@
             <h5 class="card-title">{{ item.title|capfirst }}</h5>
             <p class="card-text">{{ item.get_category_display }}</p>
         </div>
-        <button type='button'><a href="{% url 'ad:ad_detail' adtype item.id %}">View Details</a></button>
+        <button type='button' class="detail-button"><a href="{% url 'ad:ad_detail' adtype item.id %}">View Details</a></button>
     </div>
 </div>
