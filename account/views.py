@@ -17,6 +17,6 @@ class SignUpView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect(reverse_lazy('ad:ad_list'))
+            return redirect(reverse_lazy('ad:all_ad_list'))
         return render(request, 'account/signup.html', {'form': form})
 
