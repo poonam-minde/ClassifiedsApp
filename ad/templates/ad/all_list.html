@@ -4,7 +4,7 @@
     <div class="list-heading">JOBS</div>
     <ul class="list-group">
         {% for item in jobs %}
-            {% with adtype='job' %}
+            {% with ad_type='job' %}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}
@@ -14,7 +14,7 @@
     <div class="list-heading">RENTALS</div>
     <ul class="list-group">
         {% for item in rentals %}
-            {% with adtype='rental' %}
+            {% with ad_type='rental' %}
             {% include "includes/card.html" %}
             {% endwith%}
         {% empty %}
@@ -24,7 +24,7 @@
     <div class="list-heading">SALES</div>
     <ul class="list-group">
         {% for item in sales %}
-            {% with adtype='sale' %}
+            {% with ad_type='sale' %}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}
@@ -34,7 +34,7 @@
     <div class="list-heading">SERVICES</div>
     <ul class="list-group">
         {% for item in services %}
-            {% with adtype='service' %}
+            {% with ad_type='service' %}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}
@@ -44,7 +44,7 @@
     <div class="list-heading">EVENTS</div>
     <ul class="list-group">
         {% for item in events %}
-            {% with adtype='event' %}
+            {% with ad_type='event' %}
             {% include "includes/card.html" %}
             {% endwith%}
         {% empty %}
@@ -54,7 +54,7 @@
     <div class="list-heading">CLASSES</div>
     <ul class="list-group">
         {% for item in classes %}
-            {% with adtype='class' %}
+            {% with ad_type='class' %}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}

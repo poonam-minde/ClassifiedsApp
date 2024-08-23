@@ -3,13 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .forms import JobAdForm, SaleAdForm, RentalAdForm, ServiceAdForm, EventAdForm, ClassAdForm, MessageForm
-from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd, Message
+from .models import JobAd, RentalAd, SaleAd, ServiceAd, EventAd, ClassAd, Message, AdImage
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic import UpdateView, DeleteView, ListView
 from django.http import Http404
 from django.shortcuts import redirect
 from django.contrib.contenttypes.models import ContentType
+from django.forms import modelformset_factory
 
 class ModelMappingMixin:
     model_mapping = {
@@ -61,15 +62,35 @@ class AdListView(LoginRequiredMixin, TemplateView):
 
         return context
 
-class AdCreateView(LoginRequiredMixin, ModelMappingMixin,CreateView):
-    template_name = 'ad/ad_form.html'
-    success_url = reverse_lazy('ad:ad_list')
-
+class AdImagesMixin:
+    def get_formset(self,queryset):
+        AdImageFormSet = modelformset_factory(AdImage, fields=('image',), extra=4, can_delete=True)
+        return AdImageFormSet(self.request.POST or None, self.request.FILES or None, queryset=queryset)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = self.get_formset()
+        return context
+    
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        ad = form.save()
+        adtype = self.kwargs['adtype']
+        formset = self.get_formset()
+        if formset.is_valid():
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    content_type = ContentType.objects.get_for_model(ad)
+                    object_id = ad.id
+                    AdImage.objects.create(ad=ad, image=image, content_type=content_type,object_id=object_id)
         messages.success(self.request, 'Ad created successfully!')
-        return super().form_valid(form)
-
+        return redirect(self.success_url)
+    
+class AdCreateView(LoginRequiredMixin, AdImagesMixin,ModelMappingMixin,CreateView):
+    template_name = 'ad/ad_form.html'
+    success_url = reverse_lazy('ad:ad_list')
+                   
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['adtype'] = self.kwargs['adtype']
@@ -86,9 +107,14 @@ class AdCreateView(LoginRequiredMixin, ModelMappingMixin,CreateView):
     def get_queryset(self):
         return self.get_model().objects.all()
     
+    def get_formset(self):
+        queryset = AdImage.objects.none()
+        return super().get_formset(queryset)
+    
 class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
     template_name = 'ad/ad_detail.html'
     context_object_name = 'ad'
+    login_url = '/account/login' 
 
     def get_model(self):
         adtype = self.kwargs['adtype']
@@ -118,6 +144,10 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
                 object_id=ad.id
             ).exclude(user=self.request.user)
 
+        context['images'] = AdImage.objects.filter(
+                content_type__model=adtype+'ad',
+                object_id=ad.id
+            )
         context['ad_type'] = adtype
         context['form'] = MessageForm()
 
@@ -140,22 +170,25 @@ class AdDetailView(LoginRequiredMixin, DetailView, ModelMappingMixin):
         
         return self.get(request, *args, **kwargs)
       
-class AdUpdateView(LoginRequiredMixin, ModelMappingMixin, UpdateView):
+class AdUpdateView(LoginRequiredMixin, AdImagesMixin, ModelMappingMixin, UpdateView):
     template_name = 'ad/ad_form.html'
     context_object_name = 'ad'
+    success_url = reverse_lazy('ad:ad_list')
 
     def get_success_url(self):
         adtype = self.kwargs['adtype']
         return reverse_lazy('ad:ad_detail', kwargs={'adtype': adtype, 'pk': self.object.pk})
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_update'] = True
         return context
+    
+    def get_formset(self):
+        adtype = self.kwargs['adtype']
+        queryset=AdImage.objects.filter(content_type__model=adtype+'ad',
+                object_id=self.object.id)
+        return super().get_formset(queryset)
     
 class AdDeleteView(LoginRequiredMixin, ModelMappingMixin, DeleteView):
     template_name = 'ad/ad_delete.html'
@@ -172,6 +205,21 @@ class AdDeleteView(LoginRequiredMixin, ModelMappingMixin, DeleteView):
 class BaseListView(ListView):
     template_name="ad/adtype_list.html"
     context_object_name = 'ads'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        job_ad_content_type = ContentType.objects.get_for_model(self.model)
+        
+        all_images = AdImage.objects.filter(content_type=job_ad_content_type)
+        
+        images_dict = {}
+        for image in all_images:
+            if image.object_id not in images_dict:
+               images_dict[image.object_id]=image
+        
+        context['images_dict'] = images_dict
+        return context
+    
 
 class JobListView(BaseListView):
     model = JobAd
