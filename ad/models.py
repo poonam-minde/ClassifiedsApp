@@ -53,11 +53,6 @@ class JobAd(AdInfo, ContactInfo, AddressInfo):
         default='FT',
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobads')
-    image = models.ImageField(
-        upload_to='images/jobs',
-        blank=True,
-        null=True,
-    )
     salary = models.PositiveIntegerField()
 
 class RentalAd(AdInfo, ContactInfo):
@@ -73,11 +68,6 @@ class RentalAd(AdInfo, ContactInfo):
         default='FT',
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rentalads')
-    image = models.ImageField(
-        upload_to='images/rentals',
-        blank=True,
-        null=True,
-    )
     charge = models.PositiveIntegerField()
     PERIOD_CHOICES = [
         ('M', 'Month'),
@@ -106,11 +96,6 @@ class SaleAd(AdInfo):
         default='FA',
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saleads')
-    image = models.ImageField(
-        upload_to='images/sales',
-        blank=True,
-        null=True,
-    )
     price = models.PositiveIntegerField()
     
 class ServiceAd(AdInfo, ContactInfo):
@@ -127,11 +112,6 @@ class ServiceAd(AdInfo, ContactInfo):
         default='IN',
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='serviceads')
-    image = models.ImageField(
-        upload_to='images/services',
-        blank=True,
-        null=True,
-    )
     price = models.PositiveIntegerField()
     
 class EventAd(AdInfo, ContactInfo, AddressInfo):
@@ -147,11 +127,6 @@ class EventAd(AdInfo, ContactInfo, AddressInfo):
         default='FE',
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='eventads')
-    image = models.ImageField(
-        upload_to='images/events',
-        blank=True,
-        null=True,
-    )
     price = models.PositiveIntegerField()
     start_date = models.DateTimeField(default=datetime.datetime.now)
     end_date = models.DateTimeField(default=datetime.datetime.now)
@@ -169,11 +144,6 @@ class ClassAd(AdInfo, ContactInfo, AddressInfo):
         default='DA',
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='classads')
-    image = models.ImageField(
-        upload_to='images/classes',
-        blank=True,
-        null=True,
-    )
     fees = models.PositiveIntegerField()
 
 class Message(models.Model):
@@ -188,3 +158,12 @@ class Message(models.Model):
     def __str__(self):
         return f"Message by {self.user} on {self.created_at}"
      
+class AdImage(models.Model):
+    image = models.ImageField(upload_to='images/')
+    
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, default=1)
+    object_id = models.PositiveIntegerField(default=1)
+    ad = GenericForeignKey('content_type', 'object_id')
+    
+    def __str__(self):
+        return f"Image for {self.ad or 'unassociated image'}"
