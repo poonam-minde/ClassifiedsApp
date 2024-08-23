@@ -74,7 +74,7 @@ class MessageAdmin(admin.ModelAdmin):
     get_ad_title.short_description = 'Ad Title'
 
 class AdImageAdmin(admin.ModelAdmin):
-    list_display = ( 'image', 'id')
-    readonly_fields = ('id',)
+    list_display = ('ad','image')
+    readonly_fields = ('ad',)
 
 admin.site.register(AdImage, AdImageAdmin)

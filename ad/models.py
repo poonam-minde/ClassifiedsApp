@@ -159,13 +159,11 @@ class Message(models.Model):
         return f"Message by {self.user} on {self.created_at}"
      
 class AdImage(models.Model):
-    job_ad = models.ForeignKey(JobAd, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
-    rental_ad = models.ForeignKey(RentalAd, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
-    sale_ad = models.ForeignKey(SaleAd, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
-    service_ad = models.ForeignKey(ServiceAd, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
-    event_ad = models.ForeignKey(EventAd, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
-    class_ad = models.ForeignKey(ClassAd, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField(upload_to='images/')
     
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, default=1)
+    object_id = models.PositiveIntegerField(default=1)
+    ad = GenericForeignKey('content_type', 'object_id')
+    
     def __str__(self):
-        return f"Image for {self.job_ad or self.rental_ad}"    
+        return f"Image for {self.ad or 'unassociated image'}"
