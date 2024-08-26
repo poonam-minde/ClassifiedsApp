@@ -15,7 +15,7 @@
         <div class="carousel-inner">
           {% for image in images %}
           <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <img src="{{ image.image.url }}" alt="Ad Image" height="350px" width="450px">
+          <img src="{{ image.image.url }}" alt="Ad Image" width="450px" style="height: 350px">
           </div>
           {% endfor %}
         </div>
@@ -137,7 +137,7 @@
   <form method="post" class="message-form">
     {% csrf_token %}
     {{ form.message }}
-    <button type="submit" class="btn send-message">Send Message</button>
+    <button type="submit" class="btn send-message" style="height: 35px; padding: auto auto 7px; margin: 0px 0px 5px;">SEND MESSAGE</button>
   </form>
   {% endif %}
 </div>
