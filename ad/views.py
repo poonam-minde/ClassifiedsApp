@@ -268,15 +268,31 @@ class ClassListView(BaseListView):
 class AllAdListView(TemplateView):
     template_name = 'ad/all_list.html'
 
+    def get_images_for_model(self,model):
+        all_images = AdImage.objects.filter(content_type=ContentType.objects.get_for_model(model))#,object_id__in=context['jobs'])
+        print(all_images)
+        images_dict = {}
+        for image in all_images:
+            if image.object_id not in images_dict:
+               images_dict[image.object_id]=image
+            print(image.id)
+        return images_dict
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['jobs'] = JobAd.objects.all()[:4]
+        context['jobimages']=self.get_images_for_model(JobAd)
         context['rentals'] = RentalAd.objects.all()[:4]
+        context['rentalimages']=self.get_images_for_model(RentalAd)
         context['sales'] = SaleAd.objects.all()[:4]
+        context['saleimages']=self.get_images_for_model(SaleAd)
         context['services'] = ServiceAd.objects.all()[:4]
+        context['serviceimages']=self.get_images_for_model(ServiceAd)
         context['events'] = EventAd.objects.all()[:4]
+        context['eventimages']=self.get_images_for_model(EventAd)
         context['classes'] = ClassAd.objects.all()[:4]
+        context['classimages']=self.get_images_for_model(ClassAd)
 
         return context
 

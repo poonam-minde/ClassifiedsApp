@@ -4,7 +4,7 @@
     <div class="list-heading">JOBS</div>
     <ul class="list-group">
         {% for item in jobs %}
-            {% with ad_type='job' %}
+            {% with ad_type='job' images_dict=jobimages%}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}
@@ -14,7 +14,7 @@
     <div class="list-heading">RENTALS</div>
     <ul class="list-group">
         {% for item in rentals %}
-            {% with ad_type='rental' %}
+            {% with ad_type='rental' images_dict=rentalimages %}
             {% include "includes/card.html" %}
             {% endwith%}
         {% empty %}
@@ -24,7 +24,7 @@
     <div class="list-heading">SALES</div>
     <ul class="list-group">
         {% for item in sales %}
-            {% with ad_type='sale' %}
+            {% with ad_type='sale' images_dict=saleimages %}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}
@@ -34,7 +34,7 @@
     <div class="list-heading">SERVICES</div>
     <ul class="list-group">
         {% for item in services %}
-            {% with ad_type='service' %}
+            {% with ad_type='service' images_dict=serviceimages %}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}
@@ -44,7 +44,7 @@
     <div class="list-heading">EVENTS</div>
     <ul class="list-group">
         {% for item in events %}
-            {% with ad_type='event' %}
+            {% with ad_type='event' images_dict=eventimages %}
             {% include "includes/card.html" %}
             {% endwith%}
         {% empty %}
@@ -54,7 +54,7 @@
     <div class="list-heading">CLASSES</div>
     <ul class="list-group">
         {% for item in classes %}
-            {% with ad_type='class' %}
+            {% with ad_type='class' images_dict=classimages %}
             {% include "includes/card.html" %}
             {% endwith %}
         {% empty %}

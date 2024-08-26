@@ -5,10 +5,10 @@
         {% with image_path="img/"|add:ad_type|add:"/image.jpg" %}
         {% for key, value in images_dict.items%}
             {% if key == item.id %}
-            <img src="{{ value.image.url }}" class="card-img-top" alt="{{ item.title }}" >
+            <img src="{{ value.image.url }}" class="card-img-top-{{ad_type}}-{{item.id}}" alt="{{ item.title }}" >
             {% endif%}
         {% endfor%}
-        <img src="{% static image_path %}" class="card-img-top" alt="{{ item.title }}" style="display:block;">
+        <img src="{% static image_path %}" class="card-img-top-{{ad_type}}-{{item.id}}" alt="{{ item.title }}" style="display:none;">
         {% endwith %}
         <div class="card-body">
             <h5 class="card-title">{{ item.title|capfirst }}</h5>
@@ -17,3 +17,8 @@
         <button type='button' class="detail-button"><a href="{% url 'ad:ad_detail' ad_type item.id %}">View Details</a></button>
     </div>
 </div>
+{% with ele=item.id%}
+<script>
+    document.getElementsByClassName('card-img-top-{{ad_type}}-{{item.id}}')[0].style.display='block';
+</script>
+{% endwith %}
