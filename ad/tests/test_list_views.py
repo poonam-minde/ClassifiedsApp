@@ -1,8 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from ..models import JobAd, SaleAd, RentalAd, ServiceAd, EventAd, ClassAd
+from ..models import JobAd, SaleAd, RentalAd, ServiceAd, EventAd, ClassAd, AdImage
 import datetime
+from django.contrib.contenttypes.models import ContentType
 
 class BaseListViewTestCase(TestCase):
     def setUp(self):
@@ -22,6 +23,7 @@ class JobListViewTestCase(TestCase):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.client = Client()
         self.url = reverse('ad:job_list')
+        self.ad_content_type = ContentType.objects.get_for_model(JobAd)
         self.job_ad1 = JobAd.objects.create( 
             title='Test Job Ad 1',
             category='FT',
@@ -44,7 +46,18 @@ class JobListViewTestCase(TestCase):
             postal_code='12345',
             salary=50000,
             owner=self.user,)
-
+        self.image1 = AdImage.objects.create(
+            ad=self.job_ad1,
+            image='images/image1.jpg',
+            content_type=self.ad_content_type,
+            object_id=self.job_ad1.id
+        )
+        self.image2 = AdImage.objects.create(
+            ad=self.job_ad2,
+            image='images/image2.jpg',
+            content_type=self.ad_content_type,
+            object_id=self.job_ad2.id
+        )
 
     def test_context_contains_ad_type(self):
         response = self.client.get(self.url)
@@ -60,6 +73,12 @@ class JobListViewTestCase(TestCase):
             transform=lambda x: x,
             ordered=False
         )
+        self.assertIn('images_dict', response.context)
+        images_dict = response.context['images_dict']
+        self.assertEqual(images_dict.get(self.job_ad1.id), self.image1)
+        self.assertEqual(images_dict.get(self.job_ad2.id), self.image2)
+        non_existent_ad_id = 999
+        self.assertIsNone(images_dict.get(non_existent_ad_id))
 
     def test_response_status_code(self):
         response = self.client.get(self.url)

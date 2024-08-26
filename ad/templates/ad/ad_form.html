@@ -17,6 +17,10 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% include "includes/forms.html" %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+        {{ form.as_p }}
+    {% endfor %}
     <button type="submit" class="submit-button">Save</button>
 </form>
 {% endblock %}
